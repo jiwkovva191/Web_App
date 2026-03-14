@@ -1,64 +1,18 @@
-import { Router,  Request, Response } from "express"
+import { Router } from "express"
+import { UserController } from "../controllers/user.controller";
 
 const userRoutes = Router();
 
-userRoutes.get('/', (req: Request, res: Response)=>{
-    res.json({
-        message: "Hello  world"
-    })
-})
+const userController = new UserController();
 
-const users = [{
-        id: 1,
-        name: "Didka",
-        isActive: true,
-    }, {
-        id: 2,
-        name: "Bubeto",
-        isActive: true
-    }]
+userRoutes.get('/users', userController.getAll)
 
-userRoutes.get('/users', (req: Request, res: Response)=>{
-    res.json(users)
-})
+userRoutes.get('/users/:id', userController.findById)
 
-userRoutes.get('/users/:id', (req: Request, res: Response)=>{
-    const { id } = req.params
-    const { isActive, status } = req.query
-    console.log(isActive, status)
+userRoutes.post('/users', userController.create)
 
-    const requestedUser = users.find((user)=>{
-        return user.id == Number(id)
-    })
+userRoutes.put('/users/:id', userController.update)
 
-    if(!requestedUser){
-        res.json({
-            error: "User not found"
-        })
-    }
-    
-    res.json(requestedUser)
-})
+userRoutes.delete('/users/:id', userController.delete)
 
-userRoutes.post('/users', (req: Request, res: Response)=> {
-    const data = req.body
-    
-    users.push(data);
-
-    res.json({
-        message: "User created sucessfully"
-    })
-})
-
-userRoutes.put('/users/:id', (req: Request, res: Response)=>{
-    res.json({
-        message: "User updated successfully"
-    })
-})
-
-
-userRoutes.delete('/users/:id', (req: Request, res: Response)=>{
-    res.json({
-        message: "User deleted successfully"
-    })
-})
+export default userRoutes;
