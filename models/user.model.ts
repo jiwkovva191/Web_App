@@ -11,7 +11,9 @@ export class UserModel{
     }
 
     findById(id: string): User | undefined{
-        return this.users.get(id)
+        return undefined
+        // why in the basics code the following line is replaced with return undefined?
+        //return this.users.get(id)
     }
 
     create(user: User){
