@@ -1,65 +1,70 @@
 import {Request, Response} from "express";
 import { UserService } from "../services/user.service";
 
+interface IdParams {
+    id: string
+}
+
 export class UserController{
 
     constructor(private userService: UserService){}
 
-    getAll = (req: Request, res: Response)=>{
+    getAll = (req: Request, res: Response): void=>{
 
-        const users = this.userService.getAll()
+        const users = this.userService.getAllUsers()
 
         res.json({
-            'users' : users
+            message : 'User found',
+            data: users
         })
     }
 
-    findById = (req: Request, res: Response)=>{
+    getById = (req: Request<IdParams>, res: Response): void=>{
         
-        const { id } = req.params
-        const user = this.userService.findById(id as string)
+        const user = this.userService.getUserById(req.params.id)
         if(!user){
-            res.json({
+            res.status(404).json({
                 'message' : 'User not found'
             })
             return
         }
         res.json({
-            'user':user
+            message : 'User found',
+            data :user
         })
     }
     
-    create = (req: Request, res: Response)=>{
+    create = (req: Request, res: Response): void=>{
         const { name, email } = req.body
-        const user = this.userService.create({ name, email })
-        res.json({
-            'user': user
+        const user = this.userService.createUser({ name, email })
+        res.status(201).json({
+            message : 'User created',
+            data : user
         })
     }
 
-    update = (req: Request, res: Response)=>{
-        const { id } = req.params
-        const data = req.body
-        const user = this.userService.update(id as string, data)
+    update = (req: Request<IdParams>, res: Response): void=>{
+        const user = this.userService.updateUser(req.params.id, req.body)
 
         if(!user){
-            res.json({
+            res.status(404).json({
                 'message' : 'User not found'
             })
             return
         }
         res.json({
-            'user': user
+            message : 'User updated',
+            data : user
         })
     }
 
-    delete = (req: Request, res: Response)=>{
-        const { id } = req.params
-        const deleted = this.userService.delete(id as string)
+    delete = (req: Request<IdParams>, res: Response): void=>{
+        const deleted = this.userService.deleteUser(req.params.id)
         if(!deleted){
-            res.json({
+            res.status(404).json({
                 'message':'User not found'
             })
+            return
         }
         res.json({
             'message':'User deleted'
