@@ -15,7 +15,7 @@ const userController = new UserController(userService);
 
 userRoutes.get('/users', userController.getAll)
 
-userRoutes.get('/users/:id', userController.findById)
+userRoutes.get('/users/:id', userController.getById)
 
 userRoutes.post('/users', userController.create)
 
