@@ -7,26 +7,26 @@ export class UserService {
 
         }
 
-        getAll(): User[] {
+        getAllUsers(): User[] {
             return this.userModel.findAll();
         }
         
     
-        findById(id: string): User | undefined {
+        getUserById(id: string): User | undefined {
             return this.userModel.findById(id)
         }
         
         //data holds the data for the user creation
-        create(data: { name: string, email: string}): User {
+        createUser(data: { name: string, email: string}): User {
             const id = Date.now().toString()
             const user: User = {id, ...data}
             return this.userModel.create(user)
         }
-        update(id: string, user: Partial<User>): User | undefined {
-            return this.userModel.update(id, user)
+        updateUser(id: string, data: Partial<User>): User | undefined {
+            return this.userModel.update(id, data)
         }
     
-        delete(id:string): boolean {
+        deleteUser(id:string): boolean {
             return this.userModel.delete(id)
         }
 }
