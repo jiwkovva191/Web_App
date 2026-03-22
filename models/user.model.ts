@@ -1,40 +1,39 @@
-import { User } from "../types/User";
+import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { CreateUserDTO, User } from "../types/User";
 
-export class UserModel{
-    // TODO: replace with db when available
-    constructor(private users: Map<string, User>){
-        
+export class UserModel{   
+    constructor(private db: Pool){}
+
+    async findAll(): Promise<User[]> {
+        const [rows] = await this.db.query<RowDataPacket[]>("SELECT * FROM users")
+        return rows as User[];
     }
 
-    findAll(): User[]{
-        return [...this.users.values()]
+    async findById(id: number): Promise<User | undefined> {
+        const [rows] = await this.db.query<RowDataPacket[]>(
+            "SELECT * FROM users WHERE id = ?",
+            [id]
+        );
+        return rows[0] as User
     }
 
-    findById(id: string): User | undefined{
-        return undefined
-        // why in the basics code the following line is replaced with return undefined?
-        //return this.users.get(id)
-    }
-
-    create(user: User){
-        this.users.set(user.id, user)
-        return user
-    }
-
-    update(id: string, data: Partial<User>): User | undefined{
-        const existingUser = this.users.get(id)
-        if(!existingUser){
-            return undefined
+    async create(user: CreateUserDTO): Promise<User>{
+        const [result] = await this.db.query<ResultSetHeader>(
+            "INSERT INTO users(id, name, email) VALUES (NULL,?,?)",
+            [user.name, user.email]
+        )
+        return{
+            id: result.insertId,
+            name: user.name,
+            email: user.email
         }
-
-        // TODO: ???
-        const updatedUser = {...existingUser, ...data, id}
-        this.users.set(id, updatedUser)
-        return updatedUser
-
     }
 
-    delete(id: string): boolean{
-        return this.users.delete(id)
+    update(id: number, data: Partial<User>): User | undefined{
+        return {} as User;
+    }
+
+    delete(id: number): boolean{
+        return true
     }
 }
