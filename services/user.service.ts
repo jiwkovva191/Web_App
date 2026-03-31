@@ -13,16 +13,20 @@ export class UserService {
         async getUserById(id: number): Promise<User | undefined>{
             return await this.userModel.findById(id)
         }
+
+        async getUserByEmail(email: string): Promise<User | undefined>{
+            return await this.userModel.findByEmail(email)
+        }
         
         async createUser(data: CreateUserDTO): Promise<User> {
             return await this.userModel.create(data)
         }
 
-        updateUser(id: number, data: Partial<User>): User | undefined {
-            return this.userModel.update(id, data)
+        async updateUser(id: number, data: Partial<User>): Promise<User | undefined> {
+            return await this.userModel.update(id, data)
         }
     
-        deleteUser(id:number): boolean {
-            return this.userModel.delete(id)
+        async deleteUser(id:number): Promise<boolean> {
+            return await this.userModel.delete(id)
         }
 }

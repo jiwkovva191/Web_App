@@ -12,6 +12,7 @@ const userRoutes = Router();
 
 userRoutes.get('/users', userController.getAll)
 userRoutes.get('/users/:id', userController.getById)
+userRoutes.get('/users/by-email/:email', userController.getByEmail)
 userRoutes.post('/users', userController.create)
 userRoutes.put('/users/:id', userController.update)
 userRoutes.delete('/users/:id', userController.delete)
